@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TicTacToe</title>
+	<style type="text/css">
+		#board{ width: 300px; box-sizing: border-box; }
+		.cell{ width: 100px; height: 100px; line-height: 100px; display: inline-block; background-color: #666; border-right: 1px solid #fff; border-bottom: 1px solid #fff; color: #fff; font-size: 80px; box-sizing: border-box; text-align: center; overflow: hidden;  vertical-align: middle;}
+	</style>
+</head>
+<body>
+
+<div id="board"></div>
+
+<script type="text/javascript">
+	let pattern = [
+		[0, 0, 0],
+		[0, 0, 0],
+		[0, 0, 0]
+	]
+
+	let color = 1;
+
+	function show(){
+		let board = document.getElementById("board");
+		board.innerHTML = ``;
+
+		let _html = ``;
+		for(let i=0;i<3;i++){
+			for(let j=0;j<3;j++){
+				let cell = document.createElement("div");
+				cell.className = "cell";
+				let _text = 
+					pattern[i][j] == 1 ? `O` :
+					pattern[i][j] == 2 ? `X` : "";
+				cell.innerText = _text;
+				cell.addEventListener("click", function(){
+					move(i, j);
+				})
+				board.appendChild(cell);
+			}
+		}
+
+	}
+
+	function move(i, j){
+		pattern[i][j] = color;
+		
+		show();
+
+		if(check()){
+			let _color = color;
+			setTimeout(()=>{
+				alert(`winner：${_color == 1 ? "O" : "X"}`);
+			},100)
+		}
+
+		color = 3 - color;
+	}
+
+	function check(){
+		
+		for(let i=0;i<3;i++){
+			let win = true;
+			for(let j=0;j<3;j++){
+				if(pattern[i][j] != color){
+					win = false;
+				}
+			}
+			if(win){
+				return true;
+			}
+		}
+
+
+		for(let i=0;i<3;i++){
+			let win = true;
+			for(let j=0;j<3;j++){
+				if(pattern[j][i] != color){
+					win = false;
+				}
+			}
+			if(win){
+				return true;
+			}
+		}
+
+		{
+			let win = true;
+			for(let i=0;i<3;i++){
+				if(pattern[i][i] != color){
+					win = false;
+				}
+			}
+			if(win){
+				return true;
+			}
+		}
+		
+		{
+			let win = true;
+			for(let j=0;j<3;j++){
+				if(pattern[j][2-j] != color){
+					win = false;
+				}
+			}
+			if(win){
+				return true;
+			}
+		}
+		
+
+	}
+
+	show();
+</script>
+</body>
+</html>

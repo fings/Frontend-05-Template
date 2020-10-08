@@ -47,7 +47,7 @@
 		
 		show();
 
-		if(check()){
+		if(check(pattern, color)){
 			let _color = color;
 			setTimeout(()=>{
 				alert(`winner：${_color == 1 ? "O" : "X"}`);
@@ -55,9 +55,13 @@
 		}
 
 		color = 3 - color;
+
+		if(willWin(pattern, color)){
+			console.log(color == 2 ? "X will win" : "O will win");
+		}
 	}
 
-	function check(){
+	function check(pattern, color){
 		
 		for(let i=0;i<3;i++){
 			let win = true;
@@ -109,6 +113,40 @@
 		}
 		
 
+	}
+
+	function clone(object){
+		return JSON.parse(JSON.stringify(object));
+	}
+
+	function willWin(pattern, color){
+		for(let i=0;i<3;i++){
+			for(let j=0;j<3;j++){
+				if(pattern[i][j] != 0){
+					continue;
+				}
+				let _tmpPattern = clone(pattern);
+				_tmpPattern[i][j] = color;
+				if(check(_tmpPattern, color)){
+					return [i, j];
+				}
+
+			}
+		}
+
+		return null;
+	}
+
+	function bestChoice(pattern, color){
+		let p;
+		if(p = willWin(pattern, color)){
+			return {
+				point: p,
+				result: 1
+			}
+		}
+
+		let result = -2;
 	}
 
 	show();

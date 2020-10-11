@@ -12,15 +12,23 @@
 <div id="board"></div>
 
 <script type="text/javascript">
-	let pattern = [
-		[0, 2, 0],
-		[0, 1, 0],
-		[0, 0, 0]
+	// let pattern = [
+	// 	[0, 2, 0],
+	// 	[0, 1, 0],
+	// 	[0, 0, 0]
+	// ];
+
+	let = pattern = [
+		0, 0, 0,
+		0, 0, 0,
+		0, 0, 0
 	]
+
+
 
 	let color = 1;
 
-	function show(pattern){
+	function show(){
 		let board = document.getElementById("board");
 		board.innerHTML = ``;
 
@@ -30,11 +38,11 @@
 				let cell = document.createElement("div");
 				cell.className = "cell";
 				let _text = 
-					pattern[i][j] == 1 ? `O` :
-					pattern[i][j] == 2 ? `X` : "";
+					pattern[i * 3 + j] == 1 ? `O` :
+					pattern[i * 3 + j] == 2 ? `X` : "";
 				cell.innerText = _text;
 				cell.addEventListener("click", function(){
-					move(i, j);
+					userMove(i, j);
 				})
 				board.appendChild(cell);
 			}
@@ -42,23 +50,37 @@
 
 	}
 
-	function move(i, j){
-		pattern[i][j] = color;
-		
-		show(pattern);
+	function userMove(i, j){
+		pattern[i * 3 + j] = color;
+		if(check(pattern, color)){
+			let _color = color;
+			setTimeout(()=>{
+				alert(`winner：${_color == 1 ? "O" : "X"}`);
+				return false;
+			},100)
+		}
+
+		color = 3 - color;
+		show();
+		// computerMove();
+	}
+
+	function computerMove(){
+		let _choice = bestChoice(pattern, color);
+		if(_choice.point){
+			pattern[_choice.point[1] * 3 + _choice.point[0]] = color;
+		}
 
 		if(check(pattern, color)){
 			let _color = color;
 			setTimeout(()=>{
 				alert(`winner：${_color == 1 ? "O" : "X"}`);
+				return false;
 			},100)
 		}
 
 		color = 3 - color;
-
-		if(willWin(pattern, color)){
-			console.log(color == 2 ? "X will win" : "O will win");
-		}
+		show();
 	}
 
 	function check(pattern, color){
@@ -66,7 +88,7 @@
 		for(let i=0;i<3;i++){
 			let win = true;
 			for(let j=0;j<3;j++){
-				if(pattern[i][j] != color){
+				if(pattern[i * 3 + j] != color){
 					win = false;
 				}
 			}
@@ -79,7 +101,7 @@
 		for(let i=0;i<3;i++){
 			let win = true;
 			for(let j=0;j<3;j++){
-				if(pattern[j][i] != color){
+				if(pattern[j * 3 + i] != color){
 					win = false;
 				}
 			}
@@ -91,7 +113,7 @@
 		{
 			let win = true;
 			for(let i=0;i<3;i++){
-				if(pattern[i][i] != color){
+				if(pattern[i * 3 + i] != color){
 					win = false;
 				}
 			}
@@ -102,8 +124,8 @@
 		
 		{
 			let win = true;
-			for(let j=0;j<3;j++){
-				if(pattern[j][2-j] != color){
+			for(let i=0;i<3;i++){
+				if(pattern[i * 3 + 2 - i] != color){
 					win = false;
 				}
 			}
@@ -116,17 +138,18 @@
 	}
 
 	function clone(object){
-		return JSON.parse(JSON.stringify(object));
+		// return JSON.parse(JSON.stringify(object));
+		return Object.create(object);
 	}
 
 	function willWin(pattern, color){
 		for(let i=0;i<3;i++){
 			for(let j=0;j<3;j++){
-				if(pattern[i][j] != 0){
+				if(pattern[i * 3 + j] != 0){
 					continue;
 				}
 				let _tmpPattern = clone(pattern);
-				_tmpPattern[i][j] = color;
+				_tmpPattern[i * 3 + j] = color;
 				if(check(_tmpPattern, color)){
 					return [i, j];
 				}
@@ -139,8 +162,8 @@
 
 	// 获取自己最佳的点（对方最差的点）
 	function bestChoice(pattern, color){
-		let p;
-		if(p = willWin(pattern, color)){
+		let p = willWin(pattern, color);
+		if(p){
 			return {
 				point: p,
 				result: 1
@@ -149,28 +172,23 @@
 
 		let result = -2;
 		let point = null;
-		for(let i=0;i<3;i++){
+		outer:for(let i=0;i<3;i++){
 			for(let j=0;j<3;j++){
-				if(pattern[i][j] != 0){
+				if(pattern[i * 3 + j] != 0){
 					continue;
 				}
 				let _tmpPattern = clone(pattern);
-				_tmpPattern[i][j] = color;
+				_tmpPattern[i * 3 + j] = color;
 
-				let r = bestChoice(_tmpPattern, 3 - color).result;
-				if(-r == 1){
-					result = -r;
-					point = [i, j];
-					break;
-				}else if(-r > result){
-					result = -r;
+				let r = bestChoice(_tmpPattern, 3 - color);
+				if(-r.result >= result){
+					result = -r.result;
 					point = [i, j];
 				}
+				if(result == 1){
+					break outer;
+				}
 			}
-			if(result == 1){
-				break;
-			}
-			
 		}
 
 		return {
@@ -179,7 +197,7 @@
 		}
 	}
 
-	show(pattern);
+	show();
 	console.log(bestChoice(pattern, color));
 </script>
 </body>

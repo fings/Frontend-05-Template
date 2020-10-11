@@ -1,0 +1,88 @@
+<!-- 红绿灯 Promise async -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>红绿灯</title>
+	<style type="text/css">
+		div{
+			display: inline-block;
+			width: 100px;
+			height: 100px;
+			border-radius: 50%;
+			background-color: #CCC;
+			margin: 20px;
+		}
+
+		.red.light{
+			background-color: red;
+		}
+
+		.yellow.light{
+			background-color: yellow;
+		}
+
+		.green.light{
+			background-color: green;
+		}
+
+	</style>
+</head>
+<body>
+
+<div class="red"></div>
+<div class="yellow"></div>
+<div class="green"></div>
+
+<button id="next">next</button>
+
+<script type="text/javascript">
+
+	function light(color){
+		let lights = document.getElementsByTagName("div");
+		for(let i = 0; i < 3; i++){
+			lights[i].classList.remove("light");
+		}
+		document.getElementsByClassName(`${color}`)[0].classList.add("light");
+	}
+
+	function sleep(t){
+		return new Promise((resolve, reject)=>{
+			setTimeout(resolve, t);
+		})
+	}
+
+	function happen(element, eventName){
+		return new Promise((resolve, rejec)=>{
+			element.addEventListener(eventName, resolve, {once: true});
+		})
+	}
+
+	// function go(){
+	// 	light("green");
+	// 	sleep(3000).then(()=>{
+	// 		light("yellow");
+	// 		return sleep(1000);
+	// 	}).then(()=>{
+	// 		light("red");
+	// 		return sleep(2000);
+	// 	}).then(go)
+	// }
+
+	async function go(){
+		while(true){
+			light("green");
+			// await sleep(3000);
+			await happen(document.getElementById("next"), "click");
+			light("yellow");
+			// await sleep(1000);
+			await happen(document.getElementById("next"), "click");
+			light("red");
+			// await sleep(2000);
+			await happen(document.getElementById("next"), "click");
+		}
+	}
+
+	go();
+</script>
+</body>
+</html>

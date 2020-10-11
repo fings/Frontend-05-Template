@@ -13,14 +13,14 @@
 
 <script type="text/javascript">
 	let pattern = [
-		[0, 0, 0],
-		[0, 0, 0],
+		[0, 2, 0],
+		[0, 1, 0],
 		[0, 0, 0]
 	]
 
 	let color = 1;
 
-	function show(){
+	function show(pattern){
 		let board = document.getElementById("board");
 		board.innerHTML = ``;
 
@@ -45,7 +45,7 @@
 	function move(i, j){
 		pattern[i][j] = color;
 		
-		show();
+		show(pattern);
 
 		if(check(pattern, color)){
 			let _color = color;
@@ -137,6 +137,7 @@
 		return null;
 	}
 
+	// 获取自己最佳的点（对方最差的点）
 	function bestChoice(pattern, color){
 		let p;
 		if(p = willWin(pattern, color)){
@@ -147,9 +148,39 @@
 		}
 
 		let result = -2;
+		let point = null;
+		for(let i=0;i<3;i++){
+			for(let j=0;j<3;j++){
+				if(pattern[i][j] != 0){
+					continue;
+				}
+				let _tmpPattern = clone(pattern);
+				_tmpPattern[i][j] = color;
+
+				let r = bestChoice(_tmpPattern, 3 - color).result;
+				if(-r == 1){
+					result = -r;
+					point = [i, j];
+					break;
+				}else if(-r > result){
+					result = -r;
+					point = [i, j];
+				}
+			}
+			if(result == 1){
+				break;
+			}
+			
+		}
+
+		return {
+			point: point,
+			result: point ? result : 0
+		}
 	}
 
-	show();
+	show(pattern);
+	console.log(bestChoice(pattern, color));
 </script>
 </body>
 </html>

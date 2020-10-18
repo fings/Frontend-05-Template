@@ -79,8 +79,8 @@
 		let container = document.getElementById("container");
 		let buttons = document.getElementById("buttons");
 		let num = 100;
-		let backgroundColor = "";
-		let isStarted = false;
+		let isFinding = false;
+		let cells = [];
 
 		buttons.addEventListener("click", (e)=>{
 			switch(e.target.id){
@@ -88,12 +88,17 @@
 					localStorage["map"] = JSON.stringify(map);
 				break;
 				case "btn_clean":
-					localStorage["map"] = JSON.stringify(Array(10000).fill(0));
-					location.reload();
+					if(!isFinding){
+						cleanAll();
+					} else {
+						console.log("waiting...");
+					}
+					
 				break;
 				case "btn_start":
-					if(!isStarted){
-						isStarted = true;
+					if(!isFinding){
+						cleanPath();
+						isFinding = true;
 						let endPoint = [Math.random(10) *100 << 0, Math.random(10) *100 << 0];
 						findPath(map, [0,0], endPoint);
 					} else {
@@ -127,6 +132,28 @@
 					})
 
 					container.appendChild(cell);
+					cells.push(cell);
+				}
+			}
+		}
+
+		function cleanAll(){
+			for(let x = 0;x<num; x++){
+				for(let y = 0;y<num; y++){
+					map[100*x + y] = 0;
+					cells[100*x + y].className = "cell";
+				}
+			}
+			localStorage["map"] = JSON.stringify(map);
+			isFinding = false;
+		}
+
+		function cleanPath(){
+			for(let x = 0;x<num; x++){
+				for(let y = 0;y<num; y++){
+					cells[100*x + y].classList.remove("isfinded");
+					cells[100*x + y].classList.remove("endPoint");
+					cells[100*x + y].classList.remove("pathPoint");
 				}
 			}
 		}
@@ -172,7 +199,7 @@
 
 			while(queue.length){
 				let [x, y] = queue.take();
-				console.log(x, y);
+				// console.log(x, y);
 				if(x === end[0] && y === end[1]){
 					let path = [];
 
@@ -181,6 +208,9 @@
 					 	[x, y] = table[y * 100 + x];
 					 	await sleep(30);
 					 	container.children[y * 100 + x].classList.add("pathPoint");
+					 	if(x == 0 && y == 0){
+					 		isFinding = false;
+					 	}
 					 }
 
 					 return path;

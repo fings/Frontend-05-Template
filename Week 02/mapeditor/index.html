@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>地图编辑器</title>
+	<style>
+		.cell{
+			display: inline-block;
+		    width: 6px;
+		    height: 6px;
+		    line-height: 6px;
+		    background-color: gray;
+		    border-bottom: solid 1px white;
+		    border-right: solid 1px white;
+		}
+		#container{
+			width: 700px;
+			display: flex;
+			flex-wrap: wrap;
+		}
+	</style>
+</head>
+<body>
+	<div id="container"></div>
+	<div id="buttons">
+		<button id="btn_save">save</button>
+		<button id="btn_clean">clean</button>
+	</div>
+	
+	<script type="text/javascript">
+		let map = localStorage["map"] ? JSON.parse(localStorage["map"]) : Array(10000).fill(0);
+		let container = document.getElementById("container");
+		let buttons = document.getElementById("buttons");
+		let num = 100;
+
+		buttons.addEventListener("click", (e)=>{
+			switch(e.target.id){
+				case "btn_save":
+					localStorage["map"] = JSON.stringify(map);
+				break;
+				case "btn_clean":
+					localStorage["map"] = JSON.stringify(Array(10000).fill(0));
+					location.reload();
+				break;
+			}
+		})
+
+		
+
+		for(let x = 0;x<num; x++){
+			for(let y = 0;y<num; y++){
+				let cell = document.createElement("div");
+				cell.className = "cell";
+
+				if(map[100*x + y] == 1){
+					cell.style.backgroundColor = "black";
+				}
+
+				cell.addEventListener("mouseover", (e)=>{
+					if(mousedown){
+						if(clear){
+							e.target.style.backgroundColor = "";
+							map[100*x + y] = 0;
+						} else {
+							e.target.style.backgroundColor = "black";
+							map[100*x + y] = 1;
+						}
+					}
+				})
+
+				container.appendChild(cell);
+			}
+		}
+
+		let mousedown = false;
+		let clear = false;
+		document.addEventListener("mousedown", (e)=>{
+			mousedown = true;
+			clear = (e.which === 3)
+		})
+
+		document.addEventListener("mouseup", ()=> mousedown = false);
+		document.addEventListener("contextmenu", (e)=> e.preventDefault());
+
+	</script>
+</body>
+</html>

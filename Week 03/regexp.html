@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>正则表达式</title>
+	<script type="text/javascript">
+		var regexp = /([0-9\.]+)|([ \t]+)|([\r\n]+)|(\*)|(\/)|(\+)|(\-)/g;
+		var dictionary = ["Number", "Whitespace", "LineTerminatior", "*", "/", "+", "-"];
+
+		function tokennize(source){
+			var result = null;
+			while(true){
+				result = regexp.exec(source);
+				if(!result){break;}
+				for(var i=1;i<=dictionary.length;i++){
+					if(result[i]){
+						console.log(dictionary[i-1]);
+					}
+				}
+				console.log(result);
+			}
+		}
+
+		tokennize("1024 + 10 * 25");
+	</script>
+</head>
+<body>
+
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+
+2、编写带括号的四则运算产生式
+<MultiplicativeExpression>::=<Number>|
+	<MultiplicativeExpression>"*"<Number>|
+	<MultiplicativeExpression>"/"<Number>|
+<AddtiveExpression>::=<MultiplicativeExpression>|
+	<AddtiveExpression>"+"<MultiplicativeExpression>|
+	<AddtiveExpression>"-"<MultiplicativeExpression>|
+
+括号
+<PrimaryExpression> = <DecimalNumber> |  "(" <LogicalExpress> ")"
+
+
+4、尽可能寻找你知道的计算机语言，尝试把它们分类
+编程语言：
+Python、Java、C、C++、JavaScript、C#、Ruby、PHP、Objective-C、actionscript 3.0、
+
+数据描述：
+JSON，sql，css，html，xml，
+
+
+8、写一段 JS 的函数，把一个 string 它代表的字节给它转换出来，用 UTF8 对 string 进行遍码。
+<script>
+function strToChar（str）{
+  for(let i = 0; i < str.length; i++){
+    console.log(str.charCodeAt(i));
+  }
+}
+let str = 'abc';
+strToChar(str);
+</script>
+
+
+10、用 JavaScript 去设计狗咬人的代码
+
+<script>
+let Pompeo = function(){
+	return this;
+}
+
+Pompeo.prototype = {
+	bite: function(someone){
+		console.log(`Pompeo 咬了 ${someone.name} 一口,${someone.hurt()}`);
+	}
+}
+
+let HUMAN = function(name){
+	this.name = name;
+	return this;
+}
+
+HUMAN.prototype = {
+	name: "someone",
+	hurt: function(){
+		return `${this.name} hurt`;
+	}
+}
+
+let _human = new HUMAN("Trump");
+let _dog = new Pompeo();
+_dog.bite(_human);
+</script>
+
+
+
+11、找出 JavaScript 标准里面所有具有特殊行为的对象
+Array
+Arguments
+Window
+
+
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>在一个字符串中，找到字符”a”(不使用状态机)</title>
+</head>
+<body>
+<script type="text/javascript">
+	function match(string){
+		for(let c of string){
+			if(c == "a"){
+				return c;
+			}
+		}
+		return false;
+	}
+
+	console.log(match("im a good boy"));
+</script>
+</body>
+</html>

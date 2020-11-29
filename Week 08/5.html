@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>在一个字符串中，找到字符”abcdef”(不使用状态机)</title>
+</head>
+<body>
+<script type="text/javascript">
+	function match(string){
+		let found = {
+			A: false,
+			B: false,
+			C: false,
+			D: false,
+			E: false,
+		}
+		for(let c of string){
+			if(c == "a"){
+				found.A = true;
+			} else if( found.A && c == "b"){
+				found.B = true;
+			} else if( found.B && c == "c"){
+				found.C = true;
+			} else if( found.C && c == "d"){
+				found.D = true;
+			} else if( found.D && c == "e"){
+				found.E = true;
+			} else if( found.E && c == "f"){
+				found.F = true;
+				return true;
+			} else {
+				found = {
+					A: false,
+					B: false,
+					C: false,
+					D: false,
+					E: false,
+				}
+			}
+		}
+		return false;
+	}
+
+	console.log(match("i am abcdef"));
+</script>
+</body>
+</html>

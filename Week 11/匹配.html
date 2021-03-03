@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>匹配</title>
+</head>
+<body>
+<div><span id="id" class="class"></span></div>
+
+<script type="text/javascript">
+    function match(selector, element) {
+        let selectorParentTag, selectorAttrId, selectorAttrClass;
+        let _arr = selector.split(" ");
+        selectorParentTag = _arr[0];
+        selectorAttrId = _arr[1].match(/(?<=#).+(?=\.)/)[0];
+        selectorAttrClass = _arr[1].match(/(?<=\.).+/)[0];                                        
+        let _parentTag = element.parentNode.tagName;
+        if(_parentTag.toLowerCase() == selectorParentTag.toLowerCase() 
+        && element.getAttribute("id") == selectorAttrId 
+        && element.getAttribute("class") == selectorAttrClass){
+            return true;
+        }
+        return false;
+    }
+
+    console.log(match("div #id.class", document.getElementById("id")));
+</script>
+</body>
+</html>
